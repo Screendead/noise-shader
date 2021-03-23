@@ -123,7 +123,7 @@ float snoise(vec3 v){
 
 float fractal(vec3 v, int octaves, float lacunarity, float gain) {
     float sum = 0;
-    float amplitude = 1;
+    float amplitude = gain;
     float frequency = 1;
 
     for (int i = 0; i < octaves; i++) {
@@ -136,15 +136,15 @@ float fractal(vec3 v, int octaves, float lacunarity, float gain) {
 }
 
 void main() {
-    float pixel = 1 / pow(pxl, 2);
-    vec2 coords = vec2(round(fragPos.x / pixel) * pixel, round((fragPos.y / aspect) / pixel) * pixel);
+    float pixel = pow(pxl, -2);
+    vec2 coords = vec2(round(fragPos.x / pixel) * pixel, round((fragPos.y / aspect) / pixel) * pixel) * 3;
 //    vec2 coords = gl_FragCoord.xy;
 //    vec2 coords = fragPos.xy;
 //    vec2 coords = vec2(fragPos.x, fragPos.y / aspect);
-    float h = fractal(vec3(coords * 1, timestep * 0.00001), 8, 2, 0.5) * 0.5 + 0.5;
-    h = h * 0.5 + (sin(sqrt(pow(coords.x, 2) + pow(coords.y, 2)) - timestep * 0.00025) * 0.5 + 0.5) * 0.5;
-//    float h = sin(sqrt(pow(coords.x, 2) + pow(coords.y, 2)) - timestep * 0.0001);
-    h = mod(h * 16, 1);
+    float h = fractal(vec3(coords, timestep * 0.00001), 3, 2, 0.5) * 0.5 + 0.5;
+    h = h + (sin(sqrt(pow(coords.x, 2) + pow(coords.y, 2)) - timestep * 0.00025) * 0.5 + 0.5);
+//    float h = (sin(sqrt(pow(coords.x, 2) + pow(coords.y, 2)) - timestep * 0.00025) * 0.5 + 0.5);
+    h = mod(h * 8, 1);
     vec3 hsv = vec3(h, 1, 1);
     vec3 rgb = hsv2rgb(hsv);
     float c = rgb.r;

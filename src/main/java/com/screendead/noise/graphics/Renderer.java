@@ -13,7 +13,7 @@ public class Renderer {
     Matrix4f view = new Matrix4f(), transform = new Matrix4f();
     Mesh mesh;
     float ticks = 0;
-    float pxl = 0.0f;
+    float pxl = 16.0f;
 
     /**
      * Render to the framebuffer
